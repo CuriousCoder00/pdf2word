@@ -7,7 +7,7 @@ function Footer(props) {
     >
       <div className={`text-bg-${
         props.theme === "dark" ? "primary" : "light"} d-flex justify-content-center align-item-center fs-5`}>
-        <p>Made with ❤️ by DocuFlex</p>
+        <p>Made with ❤️ by Kapil</p>
       </div>
       
     </div>

@@ -1,59 +1,40 @@
-const groupdocs_conversion_cloud = require("groupdocs-conversion-cloud");
-const fs = require("fs");
+const fs = require('fs');
+const { PDFDocument } = require('pdf-lib');
+const { PDFExtract } = require('pdf.js-extract');
 
-let clientId = process.env.CLIENT_ID;
-let clientSecret = process.env.CLIENT_SECRET;
-let myStorage = process.env.MY_STORAGE;
+const pdfExtract = new PDFExtract();
 
-const config = new groupdocs_conversion_cloud.Configuration(
-  clientId,
-  clientSecret
-);
-config.apiBaseUrl = "https://api.groupdocs.cloud";
+async function convertPdfToWord(inputPath, outputPath) {
+  // Read the PDF file
+  const pdfBytes = fs.readFileSync(inputPath);
 
-let resourceFolder = "C:\\Files\\pdf2word-uploads\\sample.pdf";
-fs.readFile(resourceFolder, (err, fileStream) => {
-  let fileApi = groupdocs_conversion_cloud.FileApi.fromConfig(config);
+  // Extract text from the PDF
+  const { pages } = await pdfExtract.extractBuffer(pdfBytes, {});
 
-  let request = new groupdocs_conversion_cloud.UploadFileRequest(
-    "pdf2word-uploads",
-    fileStream,
-    myStorage
-  );
+  // Create a new Word document
+  const doc = new PDFDocument();
 
-  fileApi.uploadFile(request);
-});
+  // Add extracted text to the Word document
+  pages.forEach((page) => {
+    const { width, height, content } = page;
+    doc.addPage([width, height]);
+    doc.drawText(content);
+  });
 
-let convertApi = groupdocs_conversion_cloud.ConvertApi.fromKeys(
-  clientId,
-  clientSecret
-);
-
-let settings = new groupdocs_conversion_cloud.ConvertSettings();
-settings.filePath = "sample.pdf";
-settings.format = "docx";
-settings.outputPath = "output";
-
-request = new groupdocs_conversion_cloud.ConvertDocumentRequest(settings);
-
-result = convertApi.convertDocument(request);
-console.log("Document Converted Successfully: " + result[0]);
+  // Save the Word document to a file
+  const docBytes = await doc.save();
+  fs.writeFileSync(outputPath, docBytes);
+}
 
 
 
+const inputPath = 'input.pdf';
+const outputPath = 'output.docx';
 
-// construct FileApi
-fileApi = groupdocs_conversion_cloud.FileApi.fromConfig(config);
-
-// create download file request
-request = new groupdocs_conversion_cloud.DownloadFileRequest(
-  "output/sample.docx",
-  myStorage
-);
-
-// download file
-response = fileApi.downloadFile(request);
-
-// save file in your working directory
-fs.writeFile("C:\\Files\\sample.docx", response, "binary", (err)=>{console.log(err);});
-console.log(response);
+convertPdfToWord(inputPath, outputPath)
+  .then(() => {
+    console.log('PDF converted to Word successfully!');
+  })
+  .catch((error) => {
+    console.error('Error converting PDF to Word:', error);
+  });
