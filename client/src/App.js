@@ -1,7 +1,7 @@
 import { useState } from "react";
-import FileUploadForm from "./components/FileUploadForm";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Home from "./components/Home";
 
 function App() {
   const [theme, setTheme] = useState('light');
@@ -17,7 +17,8 @@ function App() {
   return (
     <>
       <Header theme={theme} toggleTheme={themeButton}/>
-      <FileUploadForm theme={theme}/>
+      
+      <Home theme={theme}/>
       <Footer theme={theme}/>
     </>
   );

@@ -1,3 +1,0 @@
-App key: tjfruqzbygherww
-App secret: ljlh2f6uzh4dfoc
-dbx access token: sl.Bfo4czx-gEekZ52eE_jx6a6zcM4ERlW_m_t8HubczTcXXlFMqKKv95HY6fvmaXh5Ly70IH8E5pbac5YcqihYZoaoqBGFuapASHpi6dcwq63eCKHp7JzT5a1BCjZ7vtqLPMfKW1U
